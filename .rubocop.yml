@@ -1,0 +1,31 @@
+AllCops:
+  Exclude:
+    - db/schema.rb
+    - db/migrate/**/*.rb
+    - vendor/**/*
+    - tmp/**/*
+    - log/**/*
+    - storage/**/*
+    - node_modules/**/*
+    - public/**/*
+    - bin/**/*
+    - config/initializers/**/*.rb
+    - config/environments/**/*.rb
+
+Layout/IndentationWidth:
+  Width: 2
+
+Layout/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/ClassLength:
+  Max: 100
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false

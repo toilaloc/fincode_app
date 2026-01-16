@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Welcome to Fincode Payment</title>
+  <style>
+    body { font-family: Arial, sans-serif; color: #333; background-color: #f4f4f4; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .header { text-align: center; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+    .header h1 { color: #4CAF50; margin: 0; }
+    .content { padding: 20px 0; }
+    .button { display: inline-block; padding: 12px 24px; background-color: #4CAF50; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: bold; text-align: center; }
+    .footer { padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #777; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Fincode Payment</h1>
+      <p>Testing Fincode Payment</p>
+    </div>
+    <div class="content">
+      <p>Hello <%= @user.display_name %>,</p>
+
+      <p>Welcome to Fincode Payment! We're thrilled to have you join our community of savvy financial managers. Your account has been successfully created, and you're now ready to take control of your finances.</p>
+
+      <p>With Fincode Payment, you can:</p>
+      <ul>
+        <li>Track your income and expenses effortlessly</li>
+        <li>Categorize transactions for better insights</li>
+        <li>View comprehensive financial reports</li>
+        <li>Set and achieve your budgeting goals</li>
+      </ul>
+
+      <p>Get started by signing in to your account and exploring the features. If you have any questions, our support team is here to help.</p>
+
+      <p style="text-align: center;">
+        <a href="http://0.0.0.0:3001/login" class="button">Sign In to Fincode Payment</a>
+      </p>
+
+      <p>Thank you for choosing Fincode Payment. Let's build a brighter financial future together!</p>
+
+      <p>Best regards,<br>The Fincode Payment Team</p>
+    </div>
+    <div class="footer">
+      <p>If you have any questions, contact us at support@Fincode Payment.com</p>
+      <p>You received this email because you created an account with Fincode Payment.</p>
+    </div>
+  </div>
+</body>
+</html>

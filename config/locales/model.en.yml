@@ -1,0 +1,48 @@
+en:
+  activerecord:
+    models:
+      user: "User"
+      category: "Category"
+      transaction: "Transaction"
+      diary: "Diary"
+      
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: "Please enter your email"
+              invalid: "Email is not a valid email address"
+              taken: "This email has already been taken"
+            name:
+              blank: "Please enter your name"
+              too_short: "Name is too short (minimum is %{count} characters)"
+            age:
+              blank: "Please enter your age"
+              not_a_number: "Age must be a number"
+              greater_than: "Age must be greater than %{count}"
+        category:
+          attributes:
+            name:
+              blank: "Please enter a name"
+              taken: "This category name has already been used by another category"
+            category_type:
+              blank: "Please choose a category type"
+              inclusion: "Category type is not included in the list"
+        transaction:
+          attributes:
+            amount:
+              blank: "Please enter an amount"
+              not_a_number: "Amount must be a number"
+              greater_than: "Amount must be greater than %{count}"
+            description:
+              blank: "Please enter a description"
+            transaction_date:
+              blank: "Please enter a transaction date"
+        diary:
+          attributes:
+            date:
+              blank: "Please enter a date"
+              taken: "This date has already been used for a diary entry"
+            content:
+              blank: "Please enter content"

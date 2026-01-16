@@ -1,0 +1,9 @@
+.git
+.gitignore
+.ruby-version
+.bundle
+log/*
+tmp/*
+*.log
+coverage/*
+node_modules

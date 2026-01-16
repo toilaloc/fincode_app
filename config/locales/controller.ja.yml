@@ -1,0 +1,21 @@
+ja:
+  messages:
+    success:
+      created: "%{model}を作成しました"
+      updated: "%{model}を更新しました"
+      deleted: "%{model}を削除しました"
+      logged_out: "ログアウトしました"
+      
+  errors:
+    action_failed:
+      unauthorized: "このリソースにアクセスするにはログインが必要です"
+      forbidden: "このリソースにアクセスする権限がありません"
+      invalid_params: "無効なパラメータが提供されました"
+      not_found: "要求されたリソースが見つかりません"
+      invalid_token: "無効な認証トークンです"
+      expired_token: "セッションの有効期限が切れています。再度ログインしてください"
+    service_failed:
+      validation_error: "提供されたデータの検証に失敗しました"
+      operation_failed: "要求された操作を完了できませんでした"
+    runtime:
+      internal_error: "内部サーバーエラーが発生しました"

@@ -1,0 +1,21 @@
+en:
+  messages:
+    success:
+      created: "%{model} has been created successfully"
+      updated: "%{model} has been updated successfully"
+      deleted: "%{model} has been deleted successfully"
+      logged_out: "Successfully logged out"
+      
+  errors:
+    action_failed:
+      unauthorized: "You must be logged in to access this resource"
+      forbidden: "You don't have permission to access this resource"
+      invalid_params: "Invalid parameters provided"
+      not_found: "Requested resource not found"
+      invalid_token: "Invalid authentication token"
+      expired_token: "Your session has expired. Please log in again"
+    service_failed:
+      validation_error: "Validation failed for the provided data"
+      operation_failed: "The requested operation could not be completed"
+    runtime:
+      internal_error: "An internal server error occurred"

@@ -1,0 +1,87 @@
+name: Gemini PR Review
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled]
+
+jobs:
+  gemini-pr-review:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'ai-review') && github.event.pull_request.draft == false
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Post start
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "Starting review..." | gh pr comment ${{ github.event.pull_request.number }} --body-file -
+      
+      - name: Get PR info
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          gh pr diff ${{ github.event.pull_request.number }} > diff.txt
+      
+      - name: Run review
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "ERROR: GEMINI_API_KEY not set" > review.txt
+            exit 0
+          fi
+          
+          DIFF=$(head -c 20000 diff.txt)
+          PROMPT="Please review this pull request and provide comprehensive feedback in English.
+          Use <details><summary>Key points and approval recommendation here</summary>detailed content here</details> tags to collapse detailed explanations and technical details.
+
+          Focus on the following aspects:
+          - Code quality and best practices
+          - Potential bugs or issues
+          - Performance considerations
+          - Security implications
+          - Test coverage
+          - Documentation updates if needed
+
+          Provide constructive feedback with specific improvement suggestions.
+          Use inline comments to highlight specific concerns.
+
+          Changes:
+          $DIFF"
+          PROMPT_JSON=$(echo "$PROMPT" | jq -Rs .)
+          
+          curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$GEMINI_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"contents":[{"parts":[{"text":'"$PROMPT_JSON"'}]}],"generationConfig":{"temperature":0.3}}' \
+            > response.json
+          
+          if jq -e '.candidates[0].content.parts[0].text' response.json > /dev/null 2>&1; then
+            jq -r '.candidates[0].content.parts[0].text' response.json > review.txt
+          else
+            echo "Error or unexpected response:" > review.txt
+            cat response.json >> review.txt
+          fi
+      
+      - name: Post review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "## Gemini Code Review" > final.txt
+          echo "" >> final.txt
+          cat review.txt >> final.txt
+          gh pr comment ${{ steps.pr.outputs.pr_number }} --body-file final.txt
+      
+      - name: Remove label
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr edit ${{ steps.pr.outputs.pr_number }} --remove-label "ai-review" || true

@@ -1,0 +1,88 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: fincode_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: fincode_development
+      MYSQL_USER: fincode_user
+      MYSQL_PASSWORD: fincode_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - fincode_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: fincode_redis
+    command: redis-server --appendonly yes --requirepass redis_password
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - fincode_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redis_password", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rails:
+    build: .
+    container_name: fincode_rails
+    command: sh -c "rm -f tmp/pids/server.pid && bundle exec rails db:create db:migrate && bundle exec rails server -b 0.0.0.0"
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      RAILS_ENV: development
+      DATABASE_URL: mysql2://fincode_user:fincode_password@mysql:3306/fincode_development
+      DATABASE_TEST_URL: mysql2://fincode_user:fincode_password@mysql:3306/fincode_test
+      REDIS_URL: redis://:redis_password@redis:6379/0
+      FINCODE_API_URL: ${FINCODE_API_URL:-https://api.test.fincode.jp}
+      FINCODE_SECRET_KEY: ${FINCODE_SECRET_KEY}
+      FINCODE_PUBLIC_KEY: ${FINCODE_PUBLIC_KEY}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+    networks:
+      - fincode_network
+    stdin_open: true
+    tty: true
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    container_name: fincode_mailcatcher
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - fincode_network
+
+volumes:
+  mysql_data:
+  bundle_cache:
+  redis_data:
+
+networks:
+  fincode_network:
+    driver: bridge
