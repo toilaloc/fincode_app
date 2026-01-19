@@ -15,10 +15,22 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy Gemfile and install gems
+# Copy Gemfile and install gems
 COPY Gemfile Gemfile.lock ./
+ARG BUNDLE_DEPLOYMENT="true"
+ARG BUNDLE_WITHOUT="development test"
+
 RUN gem install bundler && \
-    bundle config set --local deployment 'true' && \
-    bundle config set --local without 'development test' && \
+    if [ "$BUNDLE_DEPLOYMENT" = "true" ]; then \
+      bundle config set --local deployment 'true'; \
+    else \
+      bundle config set --local deployment 'false'; \
+    fi && \
+    if [ -n "$BUNDLE_WITHOUT" ]; then \
+      bundle config set --local without "$BUNDLE_WITHOUT"; \
+    else \
+      bundle config set --local without ' '; \
+    fi && \
     bundle install --jobs 4 --retry 3
 
 # Stage 2: Production image
