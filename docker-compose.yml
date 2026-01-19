@@ -8,7 +8,7 @@ services:
       MYSQL_USER: fincode_user
       MYSQL_PASSWORD: fincode_password
     ports:
-      - "3306:3306"
+      - "33060:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -25,7 +25,7 @@ services:
     container_name: fincode_redis
     command: redis-server --appendonly yes --requirepass redis_password
     ports:
-      - "6379:6379"
+      - "63790:6379"
     volumes:
       - redis_data:/data
     networks:
@@ -37,25 +37,22 @@ services:
       retries: 5
 
   rails:
-    build: .
+    build:
+      context: .
+      args:
+        BUNDLE_DEPLOYMENT: "false"
+        BUNDLE_WITHOUT: ""
     container_name: fincode_rails
-    command: sh -c "rm -f tmp/pids/server.pid && bundle exec rails db:create db:migrate && bundle exec rails server -b 0.0.0.0"
+    command: sh -c "rm -f tmp/pids/server.pid && bundle exec rails db:create db:migrate db:seed && bundle exec rails server -b 0.0.0.0"
     ports:
-      - "3000:3000"
-    env_file:
-      - .env
+      - "3005:3000"
     environment:
       RAILS_ENV: development
       DATABASE_URL: mysql2://fincode_user:fincode_password@mysql:3306/fincode_development
       DATABASE_TEST_URL: mysql2://fincode_user:fincode_password@mysql:3306/fincode_test
       REDIS_URL: redis://:redis_password@redis:6379/0
       FINCODE_API_URL: ${FINCODE_API_URL:-https://api.test.fincode.jp}
-      FINCODE_SECRET_KEY: ${FINCODE_SECRET_KEY}
-      FINCODE_PUBLIC_KEY: ${FINCODE_PUBLIC_KEY}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_REGION: ${AWS_REGION:-us-east-1}
-      AWS_S3_BUCKET: ${AWS_S3_BUCKET}
     depends_on:
       mysql:
         condition: service_healthy
@@ -73,8 +70,8 @@ services:
     image: schickling/mailcatcher
     container_name: fincode_mailcatcher
     ports:
-      - "1080:1080"
-      - "1025:1025"
+      - "10800:1080"
+      - "10250:1025"
     networks:
       - fincode_network
 
