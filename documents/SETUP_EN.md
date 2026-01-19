@@ -31,23 +31,9 @@ git --version
 
 ---
 
-## 1. Clone Repository
+## 1. Environment Configuration
 
-Clone the source code from the repository to your local machine:
-
-```bash
-# Clone repository
-git clone <repository-url> fincode
-cd fincode
-```
-
-> **Note**: Replace `<repository-url>` with the actual repository URL.
-
----
-
-## 2. Environment Configuration
-
-### 2.1. Create `.env` File
+### 1.1. Create `.env` File
 
 Copy the `.env.example` file to `.env`:
 
@@ -55,7 +41,7 @@ Copy the `.env.example` file to `.env`:
 cp .env.example .env
 ```
 
-### 2.2. Configure Environment Variables
+### 1.2. Configure Environment Variables
 
 Open the `.env` file and update the necessary information:
 
@@ -84,9 +70,9 @@ FINCODE_SECRET_KEY=m_test_xxxxx
 
 ---
 
-## 3. Docker Build & Up
+## 2. Docker Build & Up
 
-### 3.1. Build Docker Images
+### 2.1. Build Docker Images
 
 Build all necessary Docker images:
 
@@ -100,7 +86,7 @@ This process will:
 - Pull Redis 7 Alpine image
 - Pull Mailcatcher image
 
-### 3.2. Start Containers
+### 2.2. Start Containers
 
 Start all services:
 
@@ -110,7 +96,7 @@ docker-compose up -d
 
 The `-d` flag runs containers in detached mode (background).
 
-### 3.3. Check Container Status
+### 2.3. Check Container Status
 
 Verify that all containers are running successfully:
 
@@ -131,11 +117,11 @@ fincode_mailcatcher    Up                  0.0.0.0:10800->1080/tcp, 0.0.0.0:1025
 
 ---
 
-## 4. Database Seeding
+## 3. Database Seeding
 
 The database will be automatically created and migrated when the Rails container starts for the first time (as configured in `docker-compose.yml`).
 
-### 4.1. Check Logs
+### 3.1. Check Logs
 
 View the Rails container logs to ensure seeding completed successfully:
 
@@ -152,7 +138,7 @@ Seeding Products...
 Seeding done.
 ```
 
-### 4.2. Re-run Seeding (If Needed)
+### 3.2. Re-run Seeding (If Needed)
 
 If you need to re-run seeding:
 
@@ -168,9 +154,9 @@ docker-compose exec rails bundle exec rails db:reset
 
 ---
 
-## 5. Run Application
+## 4. Run Application
 
-### 5.1. Access Application
+### 4.1. Access Application
 
 After all containers are running successfully, open your browser and navigate to:
 
@@ -178,7 +164,7 @@ After all containers are running successfully, open your browser and navigate to
 http://localhost:3005
 ```
 
-### 5.2. Health Check
+### 4.2. Health Check
 
 Check the API health endpoint:
 
@@ -196,9 +182,9 @@ Expected response:
 
 ---
 
-## 6. Frontend Application
+## 5. Frontend Application
 
-### 6.1. Access Frontend
+### 5.1. Access Frontend
 
 The frontend application runs separately from the backend API. After setting up the frontend project, access it at:
 
@@ -208,14 +194,14 @@ http://localhost:3006
 
 > **Note**: The frontend source code is in a separate repository. Make sure to clone and set up the frontend project as well.
 
-### 6.2. Frontend Configuration
+### 5.2. Frontend Configuration
 
 The frontend is configured to communicate with the backend API at `http://localhost:3005`. Ensure both services are running:
 
 - **Backend API**: `http://localhost:3005`
 - **Frontend**: `http://localhost:3006`
 
-### 6.3. Development Workflow
+### 5.3. Development Workflow
 
 1. Start the backend (this project) using Docker Compose
 2. Start the frontend development server (refer to frontend repository documentation)
@@ -224,7 +210,7 @@ The frontend is configured to communicate with the backend API at `http://localh
 
 ---
 
-## 7. Email Login
+## 6. Email Login
 
 The application uses **Magic Link Authentication** (passwordless login via email).
 
@@ -250,7 +236,7 @@ After seeding, the following accounts are available:
 
 ---
 
-## 8. Check Email
+## 7. Check Email
 
 ### 7.1. Access Mailcatcher
 
