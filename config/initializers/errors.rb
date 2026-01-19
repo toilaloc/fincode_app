@@ -12,3 +12,5 @@ end
 Object.const_set(:ActionFailed, Errors::ActionFailed)
 Object.const_set(:ServiceFailed, Errors::ServiceFailed)
 Object.const_set(:Runtime, Errors::Runtime)
+Object.const_set(:ValidationError, Errors::ValidationError)
+Object.const_set(:NotFoundError, Errors::NotFoundError)

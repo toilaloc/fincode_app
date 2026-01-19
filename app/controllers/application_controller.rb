@@ -9,6 +9,9 @@ class ApplicationController < ActionController::API
 
   rescue_from StandardError, with: :render_error
   rescue_from Errors::BaseError, with: :render_error
+  rescue_from Payments::NotFoundError, with: :render_payment_not_found
+  rescue_from Payments::ValidationError, with: :render_payment_validation_error
+  rescue_from Payments::Error, with: :render_payment_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_error
   rescue_from ActiveRecord::RecordInvalid, with: :render_error
   rescue_from ActionDispatch::Http::Parameters::ParseError, with: :render_json_parse_error
@@ -64,5 +67,17 @@ class ApplicationController < ActionController::API
     Rails.logger.error exception.backtrace.join("\n") if Rails.env.development?
 
     render error_response
+  end
+
+  def render_payment_not_found(exception)
+    render json: { success: false, error: exception.message }, status: :not_found
+  end
+
+  def render_payment_validation_error(exception)
+    render json: { success: false, error: exception.message }, status: :unprocessable_entity
+  end
+
+  def render_payment_error(exception)
+    render json: { success: false, error: exception.message }, status: :unprocessable_entity
   end
 end

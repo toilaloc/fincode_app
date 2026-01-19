@@ -19,7 +19,7 @@ module Api
 
         render json: {
           status: 'ok',
-          service: 'kakeibo-api',
+          service: 'fincode-payment',
           timestamp: Time.current.iso8601,
           version: version,
           environment: Rails.env

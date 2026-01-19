@@ -23,15 +23,16 @@ Rails.application.routes.draw do
       resources :users, only: %i[create show update destroy]
       resources :categories, only: %i[index create show update destroy]
       resources :products, only: %i[index create show update destroy]
-      resources :payments, only: [:index, :show], param: :order_id do
+      resources :payments, only: [:index, :show] do
         collection do
           post :register
         end
         member do
           post :execute
-          post :confirm
+          put :confirm
           post :capture
           post :cancel
+          post :refund
         end
       end
     end
