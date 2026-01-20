@@ -52,7 +52,8 @@ services:
       DATABASE_TEST_URL: mysql2://fincode_user:fincode_password@mysql:3306/fincode_test
       REDIS_URL: redis://:redis_password@redis:6379/0
       FINCODE_API_URL: ${FINCODE_API_URL:-https://api.test.fincode.jp}
-      AWS_REGION: ${AWS_REGION:-us-east-1}
+      FINCODE_PUBLIC_KEY: ${FINCODE_PUBLIC_KEY}
+      FINCODE_SECRET_KEY: ${FINCODE_SECRET_KEY}
     depends_on:
       mysql:
         condition: service_healthy
